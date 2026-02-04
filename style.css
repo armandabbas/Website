@@ -427,6 +427,21 @@ body {
     transition: width 0.1s ease-out;
 }
 
+@media (max-width: 768px) {
+    .loader-text {
+        font-size: 8rem;
+    }
+
+    body.pretzel-cursor-active,
+    body.pretzel-cursor-active * {
+        cursor: auto !important;
+    }
+
+    .custom-cursor {
+        display: none !important;
+    }
+}
+
 /* Sections */
 .section {
     padding: 120px 0;

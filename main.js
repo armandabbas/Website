@@ -22,6 +22,9 @@ class CursorManager {
 
     init() {
         if (!this.cursor) return;
+        // Don't initialize on mobile
+        if (window.innerWidth <= 768) return;
+
         window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         if (this.navIcon) {
             this.navIcon.addEventListener('click', (e) => {
