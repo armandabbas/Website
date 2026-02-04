@@ -59,9 +59,20 @@ function initHomePageAnimations(container = document) {
     const progressLabel = document.querySelector('.loader-text');
     const hasVisited = sessionStorage.getItem('hasVisited');
 
+    // Initial hidden state for entrance
+    gsap.set(container.querySelector('.hero-name'), { y: 100, opacity: 0 });
+    gsap.set(container.querySelector('.nav-bio'), { y: 20, opacity: 0 });
+    gsap.set('.nav', { y: -20, opacity: 0, visibility: 'visible', pointerEvents: 'all' });
+
     if (hasVisited) {
-        gsap.set('.loader', { yPercent: -100 });
-        initScroll(container);
+        // Fast loader slide-up, but still animate content entry
+        tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
+            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.2")
+            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
+            .to('.nav', {
+                y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+                onComplete: () => initScroll(container)
+            }, "-=0.8");
         return;
     }
 
@@ -79,10 +90,10 @@ function initHomePageAnimations(container = document) {
                 ease: "power4.inOut",
                 onComplete: () => { sessionStorage.setItem('hasVisited', 'true'); }
             }, "+=0.2")
-            .from(container.querySelector('.hero-name'), { y: 100, opacity: 0, duration: 1.5, ease: "power3.out" }, "-=0.5")
-            .from(container.querySelector('.nav-bio'), { y: 20, opacity: 0, duration: 1, ease: "power2.out" }, "-=1")
-            .from('.nav', {
-                y: -20, opacity: 0, duration: 1, ease: "power2.out",
+            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.5, ease: "power3.out" }, "-=0.5")
+            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
+            .to('.nav', {
+                y: 0, opacity: 1, duration: 1, ease: "power2.out",
                 onComplete: () => initScroll(container)
             }, "-=0.8");
     } else {
@@ -117,24 +128,46 @@ function initScroll(container = document) {
 
         if (document.querySelector('.nav')) {
             gsap.to('.nav', {
-                opacity: 0, y: -100, ease: 'none',
+                opacity: 0, y: -100, ease: 'power1.inOut',
                 scrollTrigger: {
                     trigger: hero,
                     start: 'top top',
                     end: 'bottom top',
-                    scrub: true,
+                    scrub: 1, // Smooth scrolling
                     invalidateOnRefresh: true
                 }
             });
         }
     }
 
-    if (footer) {
-        const footerTrigger = { trigger: footer, start: 'top 40%', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true };
-        gsap.fromTo('.nav', { opacity: 0, y: -100 }, { opacity: 1, y: 0, ease: 'none', scrollTrigger: footerTrigger });
-        if (footerHeroName) {
-            gsap.fromTo(footerHeroName, { opacity: 0, y: '45vh' }, { opacity: 1, y: 0, ease: 'none', scrollTrigger: footerTrigger });
-        }
+    const projectsSection = container.querySelector('.projects-section');
+    if (projectsSection) {
+        gsap.fromTo('.nav',
+            { y: -100, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: projectsSection,
+                    start: 'bottom 35%', // Start when last image is almost gone (35% from top)
+                    end: 'bottom top',   // Fully in when section is gone
+                    scrub: 1,
+                    invalidateOnRefresh: true
+                }
+            }
+        );
+    }
+
+    if (footer && footerHeroName) {
+        const footerTrigger = {
+            trigger: footer,
+            start: 'top 75%',
+            end: 'top 50%',
+            scrub: 1,
+            invalidateOnRefresh: true
+        };
+        gsap.fromTo(footerHeroName, { opacity: 0, y: '45vh' }, { opacity: 1, y: 0, ease: 'none', scrollTrigger: footerTrigger });
     }
 
     ScrollTrigger.refresh();
