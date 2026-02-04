@@ -610,21 +610,21 @@ a {
 }
 
 /* Project 2 specific fixes */
-/* Project 2 specific fixes */
-.project-2-grid {
+/* Custom Split Grid (Project 1 & 2) */
+.custom-split-grid {
     /* Mobile default: Stacked */
     grid-template-columns: 1fr !important;
     gap: 40px !important;
 }
 
 @media (min-width: 768px) {
-    .project-2-grid {
+    .custom-split-grid {
         gap: 40px !important;
         grid-template-columns: 2fr 1fr !important;
     }
 }
 
-.project-2-grid .detail-image-wrapper:last-child {
+.custom-split-grid .detail-image-wrapper:last-child {
     aspect-ratio: auto;
     background-color: transparent;
     width: 100%;
@@ -636,7 +636,7 @@ a {
     justify-content: flex-end;
 }
 
-.project-2-grid .detail-image-wrapper:last-child .detail-image {
+.custom-split-grid .detail-image-wrapper:last-child .detail-image {
     width: 100%;
     height: auto;
     object-fit: unset;
