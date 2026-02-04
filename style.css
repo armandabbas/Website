@@ -611,12 +611,17 @@ a {
 
 /* Project 2 specific fixes */
 /* Project 2 specific fixes */
+.project-2-grid {
+    gap: 0 !important;
+    grid-template-columns: 1fr 1fr !important;
+}
+
 .project-2-grid .detail-image-wrapper:last-child {
     aspect-ratio: auto;
     background-color: transparent;
-    /* Remove gray bar */
-    width: auto;
-    /* Allow natural width */
+    width: 100%;
+    /* Fill the column */
+    padding: 0;
     justify-self: end;
     /* Align to right */
     display: flex;
@@ -624,10 +629,9 @@ a {
 }
 
 .project-2-grid .detail-image-wrapper:last-child .detail-image {
-    object-fit: contain;
+    width: 100%;
     height: auto;
-    width: auto;
-    max-width: 100%;
+    object-fit: unset;
 }
 
 .project-image-wrapper {
