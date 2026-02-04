@@ -59,20 +59,20 @@ function initHomePageAnimations(container = document) {
     const progressLabel = document.querySelector('.loader-text');
     const hasVisited = sessionStorage.getItem('hasVisited');
 
-    // Initial hidden state for entrance
-    gsap.set(container.querySelector('.hero-name'), { y: 100, opacity: 0 });
-    gsap.set(container.querySelector('.nav-bio'), { y: 20, opacity: 0 });
-    gsap.set('.nav', { y: -20, opacity: 0, visibility: 'visible', pointerEvents: 'all' });
+    // Initial hidden state for entrance - only opacity, no movement
+    gsap.set(container.querySelector('.hero-name'), { opacity: 0 });
+    gsap.set(container.querySelector('.nav-bio'), { opacity: 0 });
+    gsap.set('.nav', { opacity: 0, visibility: 'visible', pointerEvents: 'all' });
 
     if (hasVisited) {
         // Skip counter and HIDE it completely if already visited
         if (progressLabel) gsap.set(progressLabel, { opacity: 0, visibility: 'hidden' });
 
         tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
-            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.2")
-            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
+            .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.2")
+            .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
             .to('.nav', {
-                y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+                opacity: 1, duration: 0.8, ease: "power2.out",
                 onComplete: () => initScroll(container)
             }, "-=0.8");
         return;
@@ -96,10 +96,10 @@ function initHomePageAnimations(container = document) {
                 ease: "power4.inOut",
                 onComplete: () => { sessionStorage.setItem('hasVisited', 'true'); }
             }, "+=0.2")
-            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.5, ease: "power3.out" }, "-=0.5")
-            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
+            .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
+            .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
             .to('.nav', {
-                y: 0, opacity: 1, duration: 1, ease: "power2.out",
+                opacity: 1, duration: 1, ease: "power2.out",
                 onComplete: () => initScroll(container)
             }, "-=0.8");
     } else {
@@ -138,7 +138,7 @@ function initScroll(container = document) {
                     trigger: hero,
                     start: 'top top',
                     end: 'bottom top',
-                    scrub: 1, // Smooth scrolling
+                    scrub: 1,
                     invalidateOnRefresh: true
                 }
             });
