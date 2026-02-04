@@ -609,6 +609,16 @@ a {
     }
 }
 
+/* Project 2 specific fixes */
+.project-2-grid .detail-image-wrapper:last-child {
+    aspect-ratio: auto;
+}
+
+.project-2-grid .detail-image-wrapper:last-child .detail-image {
+    object-fit: contain;
+    height: auto;
+}
+
 .project-image-wrapper {
     position: relative;
     width: 100%;
