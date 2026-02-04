@@ -610,13 +610,24 @@ a {
 }
 
 /* Project 2 specific fixes */
+/* Project 2 specific fixes */
 .project-2-grid .detail-image-wrapper:last-child {
     aspect-ratio: auto;
+    background-color: transparent;
+    /* Remove gray bar */
+    width: auto;
+    /* Allow natural width */
+    justify-self: end;
+    /* Align to right */
+    display: flex;
+    justify-content: flex-end;
 }
 
 .project-2-grid .detail-image-wrapper:last-child .detail-image {
     object-fit: contain;
     height: auto;
+    width: auto;
+    max-width: 100%;
 }
 
 .project-image-wrapper {
