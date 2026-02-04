@@ -7,9 +7,80 @@ import barba from '@barba/core'
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
+// --- CURSOR DRAWING EFFECT ---
+class CursorCanvas {
+    constructor() {
+        this.canvas = document.getElementById('cursor-canvas');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.points = [];
+        this.maxPoints = 50;
+        this.mouse = { x: 0, y: 0, active: false };
+
+        this.init();
+    }
+
+    init() {
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.animate();
+    }
+
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    handleMouseMove(e) {
+        this.mouse.x = e.clientX;
+        this.mouse.y = e.clientY;
+        this.mouse.active = true;
+
+        this.points.push({ x: this.mouse.x, y: this.mouse.y, age: 0 });
+        if (this.points.length > this.maxPoints) {
+            this.points.shift();
+        }
+    }
+
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (this.points.length > 1) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.points[0].x, this.points[0].y);
+
+            for (let i = 1; i < this.points.length; i++) {
+                const point = this.points[i];
+                const prevPoint = this.points[i - 1];
+
+                // Quadratic curve for smoother lines
+                const xc = (prevPoint.x + point.x) / 2;
+                const yc = (prevPoint.y + point.y) / 2;
+                this.ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, xc, yc);
+            }
+
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            this.ctx.lineWidth = 1.5;
+            this.ctx.lineCap = 'round';
+            this.ctx.lineJoin = 'round';
+            this.ctx.stroke();
+        }
+
+        // Age points and remove dead ones
+        for (let i = 0; i < this.points.length; i++) {
+            this.points[i].age += 1;
+        }
+        this.points = this.points.filter(p => p.age < 30);
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
 // --- GLOBAL STATE ---
 let flipState = null;
 let lastClickedImg = null;
+new CursorCanvas();
 
 if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';

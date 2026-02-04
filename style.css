@@ -580,6 +580,16 @@ a {
 
 .alternating-grid .detail-image-wrapper {
     width: 100%;
+    aspect-ratio: auto;
+    /* Match first image reset */
+    background-color: transparent;
+}
+
+.alternating-grid .detail-image-wrapper .detail-image {
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+    object-position: unset;
 }
 
 @media (min-width: 768px) {
@@ -596,9 +606,6 @@ a {
         margin-left: auto;
         padding-right: 0;
         /* Remove padding */
-        aspect-ratio: auto;
-        /* Reset to natural ratio like first image */
-        background-color: transparent;
     }
 
     .alternating-grid .detail-image-wrapper:last-child .detail-image {
@@ -760,6 +767,17 @@ a {
 .footer-name .hero-name {
     opacity: 1;
     /* Match visible hero name */
+}
+
+#cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    background: transparent;
 }
 
 .footer-content {
