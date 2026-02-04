@@ -612,8 +612,8 @@ a {
 /* Project 2 specific fixes */
 /* Project 2 specific fixes */
 .project-2-grid {
-    gap: 0 !important;
-    grid-template-columns: 1fr 1fr !important;
+    gap: 40px !important;
+    grid-template-columns: 2fr 1fr !important;
 }
 
 .project-2-grid .detail-image-wrapper:last-child {
