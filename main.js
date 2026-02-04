@@ -154,9 +154,10 @@ barba.init({
     transitions: [{
         name: 'fade-transition',
         async leave(data) {
-            if (data.next.namespace === 'project') {
+            if (data.next.namespace === 'project' || data.current.namespace === 'project') {
                 const trigger = data.trigger;
-                const clickedImage = trigger.querySelector('.project-image');
+                // If the trigger is within a .projects-grid (like in our new "More Projects" section)
+                const clickedImage = trigger instanceof Element ? trigger.querySelector('.project-image') : null;
                 if (clickedImage) {
                     flipState = Flip.getState(clickedImage);
                     lastClickedImg = clickedImage;
@@ -225,6 +226,12 @@ barba.init({
     views: [{
         namespace: 'home',
         beforeEnter(data) {
+            // STRATEGY B: Clean Reset
+            // Force reset to top and kill all scroll triggers to prevent ghost states
+            window.scrollTo(0, 0);
+            if (lenis) lenis.scrollTo(0, { immediate: true });
+            ScrollTrigger.getAll().forEach(t => t.kill());
+
             initHomePageAnimations(data.next.container);
         }
     }, {
@@ -233,6 +240,10 @@ barba.init({
             gsap.set('.nav', { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
             gsap.set(data.next.container, { opacity: 1 });
             gsap.set('.loader', { yPercent: -100 });
+
+            // Ensure project pages also start at top
+            window.scrollTo(0, 0);
+            if (lenis) lenis.scrollTo(0, { immediate: true });
         }
     }]
 });
