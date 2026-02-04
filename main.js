@@ -79,16 +79,22 @@ function initHomePageAnimations(container = document) {
     }
 
     if (progressLabel) {
-        // Fresh visit: Ensure label is visible and start at 0%
+        // Fresh visit: Ensure label is visible and start at 0
         gsap.set(progressLabel, { opacity: 1, visibility: 'visible' });
-        progressLabel.textContent = "0%";
+        progressLabel.textContent = "0";
+
+        const progressBar = document.querySelector('.loader-progress-bar');
 
         let progress = { value: 0 };
         tl.to(progress, {
             value: 100,
             duration: 2,
             ease: "power2.inOut",
-            onUpdate: () => { progressLabel.textContent = Math.round(progress.value) + "%"; }
+            onUpdate: () => {
+                const val = Math.round(progress.value);
+                progressLabel.textContent = val;
+                if (progressBar) progressBar.style.width = val + '%';
+            }
         })
             .to('.loader', {
                 yPercent: -100,

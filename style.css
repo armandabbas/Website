@@ -406,6 +406,17 @@ a {
     line-height: 0.8;
 }
 
+.loader-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 6px;
+    background: #fff;
+    z-index: 10000;
+    transition: width 0.1s ease-out;
+}
+
 /* Sections */
 .section {
     padding: 120px 0;
