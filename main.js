@@ -127,7 +127,7 @@ function initScroll(container = document) {
             scrollTrigger: {
                 trigger: hero,
                 start: 'top top',
-                end: 'bottom top',
+                end: 'bottom top-=80%', // Shorter/Snappier per user correction
                 scrub: true,
                 pin: heroName,
                 pinSpacing: false,
@@ -135,7 +135,8 @@ function initScroll(container = document) {
             }
         });
 
-        nameTl.to(heroName, { y: '80vh', opacity: 0, duration: 1, ease: 'none' });  // Continuous slow fade and move throughout entire scroll
+        // Synchronized move down and fade out (linear)
+        nameTl.to(heroName, { y: '30vh', opacity: 0, duration: 1, ease: 'none' });
 
         if (document.querySelector('.nav')) {
             gsap.to('.nav', {
