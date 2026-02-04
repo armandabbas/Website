@@ -59,28 +59,22 @@ function initHomePageAnimations(container = document) {
     const progressLabel = document.querySelector('.loader-text');
     const hasVisited = sessionStorage.getItem('hasVisited');
 
+    // Reset loader text if it exists
+    if (progressLabel) progressLabel.textContent = "0";
+
     // Initial hidden state for entrance
     gsap.set(container.querySelector('.hero-name'), { y: 100, opacity: 0 });
     gsap.set(container.querySelector('.nav-bio'), { y: 20, opacity: 0 });
     gsap.set('.nav', { y: -20, opacity: 0, visibility: 'visible', pointerEvents: 'all' });
 
-    if (hasVisited) {
-        // Fast loader slide-up, but still animate content entry
-        tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
-            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.2")
-            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
-            .to('.nav', {
-                y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
-                onComplete: () => initScroll(container)
-            }, "-=0.8");
-        return;
-    }
-
     if (progressLabel) {
         let progress = { value: 0 };
+        // If visited, make it faster (1s), otherwise original (2s)
+        const duration = hasVisited ? 1.2 : 2;
+
         tl.to(progress, {
             value: 100,
-            duration: 2,
+            duration: duration,
             ease: "power2.inOut",
             onUpdate: () => { progressLabel.textContent = Math.round(progress.value); }
         })
@@ -123,8 +117,8 @@ function initScroll(container = document) {
             }
         });
 
-        nameTl.to(heroName, { y: '45vh', duration: 0.7, ease: 'power1.in' })
-            .to(heroName, { opacity: 0, duration: 0.35, ease: 'none' }, "<");
+        nameTl.to(heroName, { y: '80vh', duration: 1, ease: 'power1.inOut' })
+            .to(heroName, { opacity: 0, duration: 0.6, ease: 'power1.out' }, "-=0.4");
 
         if (document.querySelector('.nav')) {
             gsap.to('.nav', {
@@ -142,18 +136,21 @@ function initScroll(container = document) {
 
     const projectsSection = container.querySelector('.projects-section');
     if (projectsSection) {
+        // Use fromTo with immediateRender: false to get a clean slide from -100px
+        // without overriding the header visibility at the very top of the page.
         gsap.fromTo('.nav',
             { y: -100, opacity: 0 },
             {
                 y: 0,
                 opacity: 1,
-                ease: 'none',
+                ease: 'power1.out',
                 scrollTrigger: {
                     trigger: projectsSection,
-                    start: 'bottom 35%', // Start when last image is almost gone (35% from top)
-                    end: 'bottom top',   // Fully in when section is gone
-                    scrub: 1,
-                    invalidateOnRefresh: true
+                    start: 'bottom 50%', // Starts a bit earlier for smoother feel
+                    end: 'bottom 10%',   // Fully in
+                    scrub: 1.5,          // Slower, smoother sliding
+                    invalidateOnRefresh: true,
+                    immediateRender: false
                 }
             }
         );
@@ -260,7 +257,9 @@ barba.init({
         namespace: 'home',
         beforeEnter(data) {
             // STRATEGY B: Clean Reset
-            // Force reset to top and kill all scroll triggers to prevent ghost states
+            // Reset loader position for the 100% animation
+            gsap.set('.loader', { yPercent: 0 });
+
             window.scrollTo(0, 0);
             if (lenis) lenis.scrollTo(0, { immediate: true });
             ScrollTrigger.getAll().forEach(t => t.kill());

@@ -350,7 +350,7 @@ a {
 /* Use vw for responsive massive text */
 .hero-name {
     font-family: 'Space Mono', monospace;
-    font-size: 16vw;
+    font-size: 15vw;
     font-weight: 400;
     line-height: 0.9;
     letter-spacing: -0.06em;
@@ -359,7 +359,7 @@ a {
     margin: 0;
     white-space: nowrap;
     pointer-events: none;
-    z-index: 1;
+    z-index: 5;
     text-transform: uppercase;
 }
 
@@ -411,8 +411,10 @@ a {
     padding: 120px 0;
     position: relative;
     z-index: 10;
-    background-color: var(--bg-color);
-    /* Ensure it covers hero name */
+}
+
+.projects-section {
+    background-color: transparent;
 }
 
 .projects-section .container {
