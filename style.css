@@ -506,7 +506,7 @@ a {
 .project-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 5/3;
     overflow: hidden;
     margin-bottom: 0;
     /* Minimized spacing */

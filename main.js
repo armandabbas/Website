@@ -59,16 +59,15 @@ function initHomePageAnimations(container = document) {
     const progressLabel = document.querySelector('.loader-text');
     const hasVisited = sessionStorage.getItem('hasVisited');
 
-    // Reset loader text if it exists
-    if (progressLabel) progressLabel.textContent = "0";
-
     // Initial hidden state for entrance
     gsap.set(container.querySelector('.hero-name'), { y: 100, opacity: 0 });
     gsap.set(container.querySelector('.nav-bio'), { y: 20, opacity: 0 });
     gsap.set('.nav', { y: -20, opacity: 0, visibility: 'visible', pointerEvents: 'all' });
 
     if (hasVisited) {
-        // Skip counter if already visited
+        // Skip counter and HIDE it completely if already visited
+        if (progressLabel) gsap.set(progressLabel, { opacity: 0, visibility: 'hidden' });
+
         tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
             .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.2")
             .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
@@ -80,12 +79,16 @@ function initHomePageAnimations(container = document) {
     }
 
     if (progressLabel) {
+        // Fresh visit: Ensure label is visible and start at 0%
+        gsap.set(progressLabel, { opacity: 1, visibility: 'visible' });
+        progressLabel.textContent = "0%";
+
         let progress = { value: 0 };
         tl.to(progress, {
             value: 100,
             duration: 2,
             ease: "power2.inOut",
-            onUpdate: () => { progressLabel.textContent = Math.round(progress.value); }
+            onUpdate: () => { progressLabel.textContent = Math.round(progress.value) + "%"; }
         })
             .to('.loader', {
                 yPercent: -100,
@@ -126,8 +129,7 @@ function initScroll(container = document) {
             }
         });
 
-        nameTl.to(heroName, { y: '80vh', duration: 1, ease: 'power1.inOut' })
-            .to(heroName, { opacity: 0, duration: 0.6, ease: 'power1.out' }, "-=0.4");
+        nameTl.to(heroName, { y: '80vh', opacity: 0, duration: 1, ease: 'none' });  // Continuous slow fade and move throughout entire scroll
 
         if (document.querySelector('.nav')) {
             gsap.to('.nav', {
