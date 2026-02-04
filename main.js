@@ -67,14 +67,23 @@ function initHomePageAnimations(container = document) {
     gsap.set(container.querySelector('.nav-bio'), { y: 20, opacity: 0 });
     gsap.set('.nav', { y: -20, opacity: 0, visibility: 'visible', pointerEvents: 'all' });
 
+    if (hasVisited) {
+        // Skip counter if already visited
+        tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
+            .to(container.querySelector('.hero-name'), { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.2")
+            .to(container.querySelector('.nav-bio'), { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
+            .to('.nav', {
+                y: 0, opacity: 1, duration: 0.8, ease: "power2.out",
+                onComplete: () => initScroll(container)
+            }, "-=0.8");
+        return;
+    }
+
     if (progressLabel) {
         let progress = { value: 0 };
-        // If visited, make it faster (1s), otherwise original (2s)
-        const duration = hasVisited ? 1.2 : 2;
-
         tl.to(progress, {
             value: 100,
-            duration: duration,
+            duration: 2,
             ease: "power2.inOut",
             onUpdate: () => { progressLabel.textContent = Math.round(progress.value); }
         })
