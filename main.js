@@ -195,10 +195,11 @@ function initHomePageAnimations(container = document) {
     const progressLabel = document.querySelector('.loader-text');
     const hasVisited = sessionStorage.getItem('hasVisited');
 
-    // Initial hidden state for entrance - only opacity, no movement
-    gsap.set(container.querySelector('.hero-name'), { opacity: 0 });
-    gsap.set(container.querySelector('.nav-bio'), { opacity: 0 });
-    gsap.set('.nav', { opacity: 0, y: 0, visibility: 'visible', pointerEvents: 'all' });
+    // STRATEGY: Instant Visibility
+    // Elements are already there, revealed by the loader sliding up.
+    gsap.set(container.querySelector('.hero-name'), { opacity: 1 });
+    gsap.set(container.querySelector('.nav-bio'), { opacity: 1 });
+    gsap.set('.nav', { opacity: 1, y: 0, visibility: 'visible', pointerEvents: 'all' });
 
     if (hasVisited) {
         // Skip counter and HIDE it completely if already visited
@@ -211,22 +212,17 @@ function initHomePageAnimations(container = document) {
             onComplete: () => {
                 const loader = document.querySelector('.loader');
                 if (loader) loader.style.display = 'none';
+
+                // Initialize scroll logic immediately
+                initScroll(container);
+                // FORCE micro-scroll reset
+                lenis.scrollTo(1, { immediate: true });
+                setTimeout(() => {
+                    lenis.scrollTo(0, { immediate: true });
+                    ScrollTrigger.refresh();
+                }, 50);
             }
-        })
-            .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.2")
-            .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
-            .to('.nav', {
-                opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-                onComplete: () => {
-                    initScroll(container);
-                    // FORCE micro-scroll reset
-                    lenis.scrollTo(1, { immediate: true });
-                    setTimeout(() => {
-                        lenis.scrollTo(0, { immediate: true });
-                        ScrollTrigger.refresh();
-                    }, 50);
-                }
-            }, "-=0.8");
+        });
         return;
     }
 
@@ -236,6 +232,7 @@ function initHomePageAnimations(container = document) {
         progressLabel.textContent = "0";
 
         const progressBar = document.querySelector('.loader-progress-bar');
+        const loader = document.querySelector('.loader');
 
         let progress = { value: 0 };
         tl.to(progress, {
@@ -248,21 +245,14 @@ function initHomePageAnimations(container = document) {
                 if (progressBar) progressBar.style.width = val + '%';
             }
         })
-            .to('.loader', {
+            .to(loader, {
                 yPercent: -100,
                 duration: 0.8,
                 ease: "power4.inOut",
                 onComplete: () => {
                     sessionStorage.setItem('hasVisited', 'true');
-                    const loader = document.querySelector('.loader');
                     if (loader) loader.style.display = 'none';
-                }
-            }, "-=0.2")
-            .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
-            .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
-            .to('.nav', {
-                opacity: 1, y: 0, duration: 1, ease: "power2.out",
-                onComplete: () => {
+
                     initScroll(container);
                     // FORCE Render Engine kick-start: 1px micro-scroll
                     lenis.scrollTo(1, { immediate: true });
@@ -271,7 +261,7 @@ function initHomePageAnimations(container = document) {
                         ScrollTrigger.refresh();
                     }, 50);
                 }
-            }, "-=1");
+            }, "-=0.2");
     } else {
         // Fallback for missing elements
         if (document.querySelector('#app')) gsap.set('#app', { opacity: 1 });
