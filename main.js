@@ -353,6 +353,12 @@ barba.init({
             if (lenis) lenis.scrollTo(0, { immediate: true });
             ScrollTrigger.getAll().forEach(t => t.kill());
             initHomePageAnimations(data.next.container);
+        },
+        afterEnter(data) {
+            // Re-initialize scroll triggers after transition is fully complete
+            // This ensures DOM is stable and measurements are accurate
+            ScrollTrigger.refresh();
+            initScroll(data.next.container);
         }
     }, {
         namespace: 'project',
