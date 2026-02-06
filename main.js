@@ -207,20 +207,20 @@ function initHomePageAnimations(container = document) {
 
         tl.to('.loader', {
             yPercent: -100,
-            duration: 0.6,
+            duration: 1.5,
             ease: "power4.inOut",
-            onComplete: () => {
-                const loader = document.querySelector('.loader');
-                if (loader) loader.style.display = 'none';
-
-                // Initialize scroll logic immediately
+            onStart: () => {
+                // HIDDEN RESET: Initialize scroll while loader covers screen
                 initScroll(container);
-                // FORCE micro-scroll reset
                 lenis.scrollTo(1, { immediate: true });
                 setTimeout(() => {
                     lenis.scrollTo(0, { immediate: true });
                     ScrollTrigger.refresh();
                 }, 50);
+            },
+            onComplete: () => {
+                const loader = document.querySelector('.loader');
+                if (loader) loader.style.display = 'none';
             }
         });
         return;
@@ -247,19 +247,20 @@ function initHomePageAnimations(container = document) {
         })
             .to(loader, {
                 yPercent: -100,
-                duration: 0.8,
+                duration: 1.5,
                 ease: "power4.inOut",
-                onComplete: () => {
-                    sessionStorage.setItem('hasVisited', 'true');
-                    if (loader) loader.style.display = 'none';
-
+                onStart: () => {
+                    // HIDDEN RESET
                     initScroll(container);
-                    // FORCE Render Engine kick-start: 1px micro-scroll
                     lenis.scrollTo(1, { immediate: true });
                     setTimeout(() => {
                         lenis.scrollTo(0, { immediate: true });
                         ScrollTrigger.refresh();
                     }, 50);
+                },
+                onComplete: () => {
+                    sessionStorage.setItem('hasVisited', 'true');
+                    if (loader) loader.style.display = 'none';
                 }
             }, "-=0.2");
     } else {
