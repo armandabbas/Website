@@ -68,11 +68,18 @@ const lenis = new Lenis({
     smooth: true,
 })
 
-function raf(time) {
-    lenis.raf(time)
-    requestAnimationFrame(raf)
-}
-requestAnimationFrame(raf)
+// SYNC ScrollTrigger with Lenis
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(0);
+
+// function raf(time) {
+//     lenis.raf(time)
+//     requestAnimationFrame(raf)
+// }
+// requestAnimationFrame(raf)
 
 function updateClock() {
     const clockElement = document.getElementById('clock');
@@ -109,7 +116,7 @@ function initHomePageAnimations(container = document) {
     // Initial hidden state for entrance - only opacity, no movement
     gsap.set(container.querySelector('.hero-name'), { opacity: 0 });
     gsap.set(container.querySelector('.nav-bio'), { opacity: 0 });
-    gsap.set('.nav', { opacity: 0, visibility: 'visible', pointerEvents: 'all' });
+    gsap.set('.nav', { opacity: 0, y: 0, visibility: 'visible', pointerEvents: 'all' });
 
     if (hasVisited) {
         // Skip counter and HIDE it completely if already visited
@@ -190,7 +197,7 @@ function initScroll(container = document) {
             scrollTrigger: {
                 trigger: hero,
                 start: 'top top',
-                end: 'bottom top-=80%', // Shorter/Snappier per user correction
+                end: 'bottom top-=80%',
                 scrub: true,
                 pin: heroName,
                 pinSpacing: false,
@@ -198,17 +205,19 @@ function initScroll(container = document) {
             }
         });
 
-        // Synchronized move down and fade out (linear)
         nameTl.to(heroName, { y: '30vh', opacity: 0, duration: 1, ease: 'none' });
 
+        // HIDE NAV ON SCROLL (Only if we are NOT at top)
         if (document.querySelector('.nav')) {
             gsap.to('.nav', {
-                opacity: 0, y: -100, ease: 'power1.inOut',
+                opacity: 0,
+                y: -100,
+                ease: 'power1.inOut',
                 scrollTrigger: {
                     trigger: hero,
-                    start: 'top+=50 top', // Start fading slightly AFTER top to avoid race condition
+                    start: 'top+=100 top', // Trigger only after 100px scroll
                     end: 'bottom top',
-                    scrub: 1,
+                    scrub: true,
                     invalidateOnRefresh: true
                 }
             });
