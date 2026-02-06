@@ -137,6 +137,12 @@ function initHomePageAnimations(container = document) {
                 opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
                 onComplete: () => {
                     initScroll(container);
+                    // FORCE micro-scroll reset
+                    lenis.scrollTo(1, { immediate: true });
+                    setTimeout(() => {
+                        lenis.scrollTo(0, { immediate: true });
+                        ScrollTrigger.refresh();
+                    }, 50);
                 }
             }, "-=0.8");
         return;
@@ -174,7 +180,15 @@ function initHomePageAnimations(container = document) {
             .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
             .to('.nav', {
                 opacity: 1, y: 0, duration: 1, ease: "power2.out",
-                onComplete: () => initScroll(container)
+                onComplete: () => {
+                    initScroll(container);
+                    // FORCE Render Engine kick-start: 1px micro-scroll
+                    lenis.scrollTo(1, { immediate: true });
+                    setTimeout(() => {
+                        lenis.scrollTo(0, { immediate: true });
+                        ScrollTrigger.refresh();
+                    }, 50);
+                }
             }, "-=1");
     } else {
         // Fallback for missing elements
