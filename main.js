@@ -120,14 +120,17 @@ function initHomePageAnimations(container = document) {
             duration: 0.6,
             ease: "power4.inOut",
             onComplete: () => {
-                document.querySelector('.loader').style.display = 'none';
+                const loader = document.querySelector('.loader');
+                if (loader) loader.style.display = 'none';
             }
         })
             .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.2")
             .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
             .to('.nav', {
-                opacity: 1, duration: 0.8, ease: "power2.out",
-                onComplete: () => initScroll(container)
+                opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+                onComplete: () => {
+                    initScroll(container);
+                }
             }, "-=0.8");
         return;
     }
@@ -156,16 +159,19 @@ function initHomePageAnimations(container = document) {
                 ease: "power4.inOut",
                 onComplete: () => {
                     sessionStorage.setItem('hasVisited', 'true');
-                    document.querySelector('.loader').style.display = 'none';
+                    const loader = document.querySelector('.loader');
+                    if (loader) loader.style.display = 'none';
                 }
             }, "-=0.2")
             .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
             .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
             .to('.nav', {
-                opacity: 1, duration: 1, ease: "power2.out",
+                opacity: 1, y: 0, duration: 1, ease: "power2.out",
                 onComplete: () => initScroll(container)
-            }, "-=0.8");
+            }, "-=1");
     } else {
+        // Fallback for missing elements
+        if (document.querySelector('#app')) gsap.set('#app', { opacity: 1 });
         initScroll(container);
     }
 }
@@ -200,7 +206,7 @@ function initScroll(container = document) {
                 opacity: 0, y: -100, ease: 'power1.inOut',
                 scrollTrigger: {
                     trigger: hero,
-                    start: 'top top',
+                    start: 'top+=50 top', // Start fading slightly AFTER top to avoid race condition
                     end: 'bottom top',
                     scrub: 1,
                     invalidateOnRefresh: true
