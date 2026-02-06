@@ -563,6 +563,27 @@ body {
     width: 100%;
 }
 
+.detail-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #111;
+    /* Mobile: Match main page format */
+    aspect-ratio: 5/3;
+}
+
+.detail-image-wrapper:first-child,
+.detail-image-wrapper:last-child {
+    aspect-ratio: 5 / 3;
+}
+
+.detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 @media (min-width: 768px) {
     .detail-images-grid {
         grid-template-columns: 2fr 1fr;
@@ -573,43 +594,26 @@ body {
     /* Add padding to right image only */
     .detail-image-wrapper:last-child {
         padding-right: 40px;
+        aspect-ratio: 3/4;
+        /* Restore portrait for desktop */
+    }
+
+    .detail-image-wrapper:first-child {
+        aspect-ratio: auto;
+        /* Restore auto for desktop */
     }
 }
 
-.detail-image-wrapper {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    background-color: #111;
-}
 
-/* First image - large landscape - natural height */
-.detail-image-wrapper:first-child {
-    aspect-ratio: auto;
-    /* Remove fixed aspect ratio */
-    background-color: transparent;
-    /* Remove black bars */
-}
-
-/* Second image - portrait */
-.detail-image-wrapper:last-child {
-    aspect-ratio: 3/4;
-}
-
-.detail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center -10px;
-}
-
-/* First image - show full image without cropping */
-.detail-image-wrapper:first-child .detail-image {
-    width: 100%;
-    height: auto;
-    /* Allow natural height */
-    object-fit: unset;
-    object-position: unset;
+/* First image - show full image without cropping (DESKTOP ONLY) */
+@media (min-width: 768px) {
+    .detail-image-wrapper:first-child .detail-image {
+        width: 100%;
+        height: auto;
+        /* Allow natural height */
+        object-fit: unset;
+        object-position: unset;
+    }
 }
 
 /* Alternating Grid (Project 3) */
@@ -619,34 +623,31 @@ body {
     gap: 40px !important;
 }
 
+/* Mobile defaults for alternating grid -> 5/3 handled by generic rule */
 .alternating-grid .detail-image-wrapper {
     width: 100%;
-    aspect-ratio: auto;
-    /* Match first image reset */
+    /* aspect-ratio: 5/3 inherited */
     background-color: transparent;
-}
-
-.alternating-grid .detail-image-wrapper .detail-image {
-    width: 100%;
-    height: auto;
-    object-fit: unset;
-    object-position: unset;
 }
 
 @media (min-width: 768px) {
     .alternating-grid .detail-image-wrapper {
         width: 66.666%;
-        /* Match width of 2fr in 2fr 1fr grid */
+        aspect-ratio: auto;
+        /* Desktop override */
     }
 
-    /* First image left aligned (default) */
+    .alternating-grid .detail-image-wrapper .detail-image {
+        width: 100%;
+        height: auto;
+        object-fit: unset;
+        object-position: unset;
+    }
 
-    /* Second image right aligned */
     .alternating-grid .detail-image-wrapper:last-child {
         justify-self: end;
         margin-left: auto;
         padding-right: 0;
-        /* Remove padding */
     }
 
     .alternating-grid .detail-image-wrapper:last-child .detail-image {
@@ -670,24 +671,22 @@ body {
         gap: 40px !important;
         grid-template-columns: 2fr 1fr !important;
     }
-}
 
-.custom-split-grid .detail-image-wrapper:last-child {
-    aspect-ratio: auto;
-    background-color: transparent;
-    width: 100%;
-    /* Fill the column */
-    padding: 0;
-    justify-self: end;
-    /* Align to right */
-    display: flex;
-    justify-content: flex-end;
-}
+    .custom-split-grid .detail-image-wrapper:last-child {
+        aspect-ratio: auto;
+        background-color: transparent;
+        width: 100%;
+        padding: 0;
+        justify-self: end;
+        display: flex;
+        justify-content: flex-end;
+    }
 
-.custom-split-grid .detail-image-wrapper:last-child .detail-image {
-    width: 100%;
-    height: auto;
-    object-fit: unset;
+    .custom-split-grid .detail-image-wrapper:last-child .detail-image {
+        width: 100%;
+        height: auto;
+        object-fit: unset;
+    }
 }
 
 .project-image-wrapper {
