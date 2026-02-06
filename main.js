@@ -115,7 +115,14 @@ function initHomePageAnimations(container = document) {
         // Skip counter and HIDE it completely if already visited
         if (progressLabel) gsap.set(progressLabel, { opacity: 0, visibility: 'hidden' });
 
-        tl.to('.loader', { yPercent: -100, duration: 0.6, ease: "power4.inOut" })
+        tl.to('.loader', {
+            yPercent: -100,
+            duration: 0.6,
+            ease: "power4.inOut",
+            onComplete: () => {
+                document.querySelector('.loader').style.display = 'none';
+            }
+        })
             .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.2")
             .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=1")
             .to('.nav', {
@@ -147,8 +154,11 @@ function initHomePageAnimations(container = document) {
                 yPercent: -100,
                 duration: 0.8,
                 ease: "power4.inOut",
-                onComplete: () => { sessionStorage.setItem('hasVisited', 'true'); }
-            }, "+=0.2")
+                onComplete: () => {
+                    sessionStorage.setItem('hasVisited', 'true');
+                    document.querySelector('.loader').style.display = 'none';
+                }
+            }, "-=0.2")
             .to(container.querySelector('.hero-name'), { opacity: 1, duration: 1.5, ease: "power2.out" }, "-=0.5")
             .to(container.querySelector('.nav-bio'), { opacity: 1, duration: 1, ease: "power2.out" }, "-=1")
             .to('.nav', {
