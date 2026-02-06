@@ -568,19 +568,22 @@ body {
     width: 100%;
     overflow: hidden;
     background-color: #111;
-    /* Mobile: Match main page format */
-    aspect-ratio: 5/3;
+    /* Mobile: Show full image (no crop) */
+    aspect-ratio: auto;
 }
 
 .detail-image-wrapper:first-child,
 .detail-image-wrapper:last-child {
-    aspect-ratio: 5 / 3;
+    aspect-ratio: auto;
 }
 
 .detail-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    /* Natural height */
+    object-fit: contain;
+    /* Ensure full visibility */
+    display: block;
     object-position: center;
 }
 
@@ -601,6 +604,13 @@ body {
     .detail-image-wrapper:first-child {
         aspect-ratio: auto;
         /* Restore auto for desktop */
+    }
+
+    /* On desktop, we want cover for fixed ratios, or auto for landscape? */
+    /* Restore cover for the portrait image */
+    .detail-image-wrapper:last-child .detail-image {
+        height: 100%;
+        object-fit: cover;
     }
 }
 
