@@ -310,6 +310,9 @@ a {
 /* Hero Section */
 .hero {
     height: 100vh;
+    /* Fallback */
+    height: 100dvh;
+    /* Mobile fix */
     width: 100%;
     position: relative;
     display: flex;
@@ -339,6 +342,8 @@ a {
 .name-container {
     position: absolute;
     bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    /* Mobile safe area fix */
     left: 0;
     width: 100%;
     display: flex;
