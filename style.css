@@ -432,10 +432,9 @@ body {
 
 @media (max-width: 768px) {
     .loader {
-        padding: 20px;
-        justify-content: center;
-        /* Center on mobile to avoid edge issues */
-        align-items: center;
+        padding: calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-right));
+        justify-content: flex-end;
+        align-items: flex-end;
     }
 
     .loader-text {
