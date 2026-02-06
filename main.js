@@ -87,6 +87,16 @@ function updateClock() {
         const now = new Date();
         clockElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
     }
+
+    // SAFETY MONITOR: Ensure nav is visible at the top
+    // This fixes the "black header" issue if animations get stuck or resize events hide it
+    if (window.scrollY < 50) {
+        const nav = document.querySelector('.nav');
+        if (nav && (getComputedStyle(nav).opacity < "0.5" || nav.style.opacity === "0")) {
+            // Force reset without animation if stuck
+            gsap.set(nav, { opacity: 1, y: 0, visibility: 'visible' });
+        }
+    }
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -222,17 +232,18 @@ function initScroll(container = document) {
         nameTl.to(heroName, { y: '30vh', opacity: 0, duration: 1, ease: 'none' });
 
         // HIDE NAV ON SCROLL (Only if we are NOT at top)
+        // HIDE NAV ON SCROLL
+        // Use toggleActions instead of scrub for robust behavior on mobile resize
         if (document.querySelector('.nav')) {
-            gsap.to('.nav', {
-                opacity: 0,
-                y: -100,
-                ease: 'power1.inOut',
-                scrollTrigger: {
-                    trigger: hero,
-                    start: 'top+=100 top', // Trigger only after 100px scroll
-                    end: 'bottom top',
-                    scrub: true,
-                    invalidateOnRefresh: true
+            ScrollTrigger.create({
+                trigger: hero,
+                start: 'top+=100 top',
+                end: 'bottom top',
+                onLeave: () => gsap.to('.nav', { opacity: 0, y: -100, duration: 0.5, ease: 'power2.inOut', overwrite: true }),
+                onEnterBack: () => gsap.to('.nav', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', overwrite: true }),
+                // Ensure it's visible at start
+                onRefresh: () => {
+                    if (window.scrollY < 50) gsap.set('.nav', { opacity: 1, y: 0 });
                 }
             });
         }
