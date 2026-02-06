@@ -81,10 +81,10 @@ function updateClock() {
         const now = new Date();
         clockElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-        // SAFETY MONITOR: Ensure nav is visible at the very top
-        if (window.scrollY < 10) {
+        // SAFETY MONITOR: Ensure nav is visible at the very top (ONLY ON HOME PAGE)
+        const homeContainer = document.querySelector('[data-barba-namespace="home"]');
+        if (homeContainer && window.scrollY < 10) {
             const nav = document.querySelector('.nav');
-            // Only force if opacity is essentially zero
             if (nav && getComputedStyle(nav).opacity === "0") {
                 gsap.set(nav, { opacity: 1, y: 0, visibility: 'visible' });
             }
